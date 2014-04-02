@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xmlns:jee="http://www.springframework.org/schema/jee" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/tx
+           http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd          
+           http://www.springframework.org/schema/cache
+           http://www.springframework.org/schema/cache/spring-cache.xsd           
+           http://www.springframework.org/schema/data/mongo
+           http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd
+           http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.0.xsd"
+	default-lazy-init="false">
+
+
+	<description>Spring公共配置文件 </description>
+	<!-- All Log use self4j 
+	<bean id="julOverSlf4jProcessor" class="com.itel.platform.utils.JulOverSlf4jProcessor" />
+     -->
+     
+	<!-- internationalization file -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>messages/messages</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 定义受环境影响易变的变量 -->
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+		<property name="ignoreResourceNotFound" value="true" />
+		<property name="locations">
+			<list>
+				<value>classpath*:/infrastructure/app.properties</value>
+				<value>classpath*:/infrastructure/jdbc.properties</value>
+			
+			</list>
+		</property>
+	</bean>
+
+	<!-- 使用annotation 自动注册bean,并保证@Required,@Autowired的属性被注入 -->
+	<context:component-scan base-package="com.weheros" />
+	<!--  
+	<cache:annotation-driven />
+	-->
+
+	<!-- 数据源配置,主要用于开发测试环境 -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${jdbc.driverClassName}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="user" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+
+		<property name="initialPoolSize">
+			<value>10</value>
+		</property>
+		<property name="minPoolSize">
+			<value>5</value>
+		</property>
+		<property name="maxPoolSize">
+			<value>30</value>
+		</property>
+		<property name="acquireIncrement">
+			<value>5</value>
+		</property>
+		<property name="maxIdleTime">
+			<value>60</value>
+		</property>
+		<property name="maxStatements">
+			<value>100</value>
+		</property>
+	</bean>
+
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+
+	<!-- 使用annotation定义事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	<!--=================AOP trasction controll and send Mail=============== -->
+	<aop:config>
+		<!-- This definition creates auto-proxy infrastructure based on the given 
+			pointcut, expressed in AspectJ pointcut language. Here: applying the advice 
+			named "txAdvice" to all methods on classes in package and subpackages. -->
+		<aop:advisor
+			pointcut="execution(* com.weheros.platform.infrastructure.datasystem..*.*(..))"
+			advice-ref="txAdvice" />
+
+	</aop:config>
+
+	<!-- Transaction advice definition, based on method name patterns. Defaults 
+		to PROPAGATION_REQUIRED for all methods whose name starts with "insert" or 
+		"update", and to PROPAGATION_REQUIRED with read-only hint for all other methods. 
+		transaction-manager="transactionManager" All exception rollback, If do not,please 
+		add the parameter no-rollback-for="xxxException" -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="*insert*" rollback-for="Exception" />
+			<tx:method name="*save*" rollback-for="Exception" />
+			<tx:method name="*update*" rollback-for="Exception" />
+			<tx:method name="*delete*" rollback-for="Exception" />
+			<tx:method name="*" read-only="true" />
+		</tx:attributes>
+	</tx:advice>
+
+	<!-- ============================== MongoDB configuration =========================================== -->
+
+	<mongo:mongo id="replicaSetMongo" replica-set="${mongo.replicaSetSevers}">
+		<mongo:options connections-per-host="${mongo.connectionsPerHost}"
+			threads-allowed-to-block-for-connection-multiplier="${mongo.threadsAllowedToBlockForConnectionMultiplier}"
+			connect-timeout="${mongo.connectTimeout}" max-wait-time="${mongo.maxWaitTime}"
+			auto-connect-retry="${mongo.autoConnectRetry}" socket-keep-alive="${mongo.socketKeepAlive}"
+			socket-timeout="${mongo.socketTimeout}" slave-ok="${mongo.slaveOk}"
+			write-number="1" write-timeout="0" write-fsync="true" />
+	</mongo:mongo>
+
+	<mongo:db-factory dbname="mongoCommunityDB" mongo-ref="replicaSetMongo" />
+
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
+	</bean>
+	
+	<!-- ============================== redis ================================= -->
+	<bean id="jedisConnFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
+        p:use-pool="true" p:host-name="${redis.masterServer}" p:port="${redis.masterPort}"/>
+        
+     <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate" p:connection-factory-ref="jedisConnFactory"/>
+
+ 
+</beans>
