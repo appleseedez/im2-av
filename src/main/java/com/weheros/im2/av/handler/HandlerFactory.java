@@ -1,26 +1,36 @@
 package com.weheros.im2.av.handler;
 
-import com.weheros.im2.av.domain.HeartBeat;
-import com.weheros.im2.av.domain.Login;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.weheros.im2.av.domain.Signal;
+import com.weheros.im2.av.domain.SignalType;
 
 /**
- * @author Administrator
+ * Simple factory for ISignalHandler
+ * @author Yang
  * @version 1.0
- * @created 27-??-2014 12:11:09
+ * @created 27-03-2014 12:11:09
  */
 public class HandlerFactory {
-
-	public static ISignalHandler getInstance(Signal signal){
-		ISignalHandler handler=null;
+	private static final Map<Integer,ISignalHandler> handlers=new HashMap<Integer,ISignalHandler>();
+	static{
+		handlers.put(SignalType.LOGIN_REQ , new LoginHandler());
+		handlers.put(SignalType.START_CALL_REQ , new CallHandler());
 		
-		if(signal instanceof Login ){
-			handler=new LoginHandler();
-		}
-		if(signal instanceof HeartBeat){
-			handler=new HeartBeatHandler();
-		}
-		return handler;
+		//forward signal
+		handlers.put(SignalType.END_SESSION , new ReforwardHandler());
+		handlers.put(SignalType.ANSWER , new ReforwardHandler());
+		handlers.put(SignalType.CALL , new ReforwardHandler());
+		
+		handlers.put(SignalType.LOGOUT_REQ , new LogoutHandler());
+		handlers.put(SignalType.HEART_BEAT , new HeartBeatHandler());
+	}
+	public static ISignalHandler getInstance(Signal signal){
+		
+		int signalType=signal.getHead().getSignalType();
+  
+		return handlers.get(signalType);
 	}
 
 }

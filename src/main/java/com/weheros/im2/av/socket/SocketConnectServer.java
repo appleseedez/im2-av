@@ -26,14 +26,14 @@ public class SocketConnectServer {
 
 	}
 
-	public static void main() {
+	public static void main(String[] arr) {
 		IoAcceptor acceptor = new NioSocketAcceptor();
 
 		acceptor.getFilterChain().addLast("logger", new LoggingFilter());
 		acceptor.getFilterChain().addLast("codec",	new ProtocolCodecFilter(new TextLineCodecFactory(Charset
 						.forName("UTF-8"))));
 
-		acceptor.setHandler(new Connecthandler());
+		acceptor.setHandler(new AVSignalhandler());
 		acceptor.getSessionConfig().setReadBufferSize(2048);
 		acceptor.getSessionConfig().setIdleTime(IdleStatus.BOTH_IDLE, 10);
 		try {

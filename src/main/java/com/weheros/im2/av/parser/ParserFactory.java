@@ -1,7 +1,8 @@
 package com.weheros.im2.av.parser;
 
-import com.weheros.im2.av.domain.Login;
 import com.weheros.im2.av.domain.Signal;
+import com.weheros.im2.av.request.Call;
+import com.weheros.im2.av.request.FARequest;
 import com.weheros.platform.utils.ToJson;
 
 /**
@@ -11,16 +12,14 @@ import com.weheros.platform.utils.ToJson;
  */
 public class ParserFactory {
     
-	private static void parse(String content){
+	private static String parse(String content){
 		//split the signal string and find the part,which is json.
 		// TODO
-		
+		return content;
 	}
 	public static Signal convert(String contentSignal){
-		parse(contentSignal);
-		//if it is json		
-		// TODO
-		return (Signal) ToJson.toObject(contentSignal, Login.class);	
+		String all_json=parse(contentSignal);		
+		return (Signal) ToJson.toObject(all_json, FARequest.class);	
 	}
 
 }

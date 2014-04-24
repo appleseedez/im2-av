@@ -14,14 +14,10 @@ import com.weheros.platform.utils.ToJson;
  * @version 1.0
  * @created 27-03-2014 12:11:09
  */
-public class Connecthandler extends IoHandlerAdapter {
-	  private static final Logger LOGGER = LoggerFactory.getLogger(Connecthandler.class);
+public class AVSignalhandler extends IoHandlerAdapter {
+	  private static final Logger LOGGER = LoggerFactory.getLogger(AVSignalhandler.class);
 
-	    public void sessionCreated(IoSession session) throws Exception {
-	         super.sessionCreated(session);
-	         
-	    }
-
+	 
 	    public void sessionOpened(IoSession session) throws Exception {
 	        // Empty handler
 	    }
@@ -39,6 +35,7 @@ public class Connecthandler extends IoHandlerAdapter {
 	            LOGGER.warn("EXCEPTION, please implement " + getClass().getName()
 	                    + ".exceptionCaught() for proper handling:", cause);
 	        }
+	        session.close(true);
 	    }
 
 	    public void messageReceived(IoSession session, Object message) throws Exception {
@@ -46,11 +43,11 @@ public class Connecthandler extends IoHandlerAdapter {
 	    	LOGGER.info("-----receive the message------------"+ToJson.toJson(message));
 	    	//invoke the manager
 	    	
-	    	SignalManager.handleSignal(session,message.toString());
+	    	String response=SignalManager.handleSignal(message.toString());
+	    	if(response!=null&&!"".equals(response)){
+	    	   session.write(response);
+	    	}
 	    }
 
-	    public void messageSent(IoSession session, Object message) throws Exception {
-	        // Empty handler
-	    }
-
+	 
 }

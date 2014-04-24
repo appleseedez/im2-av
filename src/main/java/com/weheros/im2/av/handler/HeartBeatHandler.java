@@ -5,6 +5,7 @@
 package com.weheros.im2.av.handler;
 
 import com.weheros.im2.av.domain.Signal;
+import com.weheros.im2.av.response.NotNeedResponse;
 
 /**
  * @ClassName: HeartBeatHandler
@@ -14,10 +15,9 @@ import com.weheros.im2.av.domain.Signal;
 public class HeartBeatHandler implements ISignalHandler {
 
 	@Override
-	public String handle(Signal signal) {
-		// TODO Auto-generated method stub
-		String json="";
-		return json;
+	public Signal handle(Signal signal) {
+		
+		return new NotNeedResponse();
 		
 	}
 
