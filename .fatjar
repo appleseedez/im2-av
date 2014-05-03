@@ -1,0 +1,14 @@
+#Fat Jar Configuration File
+#Sat May 03 13:03:44 CST 2014
+onejar.license.required=true
+manifest.classpath=
+manifest.removesigners=true
+onejar.checkbox=false
+jarname=im2-av-server.jar
+manifest.mergeall=true
+manifest.mainclass=com.weheros.im2.av.socket.SocketConnectServer
+manifest.file=<createnew>
+jarname.isextern=false
+onejar.expand=
+excludes=<po|im2-av>~infrastructure/;<po|im2-av>~messages/;<po|im2-av>~spring/;<jar|spring-context-3.2.4.RELEASE.jar>;<jar|spring-aop-3.2.4.RELEASE.jar>;<jar|aopalliance-1.0.jar>;<jar|spring-beans-3.2.4.RELEASE.jar>;<jar|spring-expression-3.2.4.RELEASE.jar>;<jar|spring-core-3.2.4.RELEASE.jar>;<jar|junit-4.10.jar>;<jar|hamcrest-core-1.1.jar>;<jar|jedis-2.4.2.jar>;<jar|commons-pool2-2.0.jar>;<jar|spring-data-redis-1.2.0.RELEASE.jar>;<jar|spring-context-support-3.2.8.RELEASE.jar>;<jar|spring-tx-3.2.8.RELEASE.jar>
+includes=
