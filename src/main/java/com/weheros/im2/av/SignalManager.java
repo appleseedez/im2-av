@@ -1,11 +1,15 @@
 package com.weheros.im2.av;
 
 
+import org.apache.mina.core.session.IoSession;
+
 import com.weheros.im2.av.domain.Signal;
 import com.weheros.im2.av.domain.SignalType;
 import com.weheros.im2.av.handler.HandlerFactory;
 import com.weheros.im2.av.handler.ISignalHandler;
 import com.weheros.im2.av.parser.ParserFactory;
+import com.weheros.im2.av.socket.connect.IConnectManager;
+import com.weheros.im2.av.socket.connect.SocketConnectManager;
 import com.weheros.platform.security.Secrete;
 import com.weheros.platform.utils.ToJson;
 
@@ -16,14 +20,18 @@ import com.weheros.platform.utils.ToJson;
  */
 public class SignalManager{
    
-	public static String handleSignal(String rawSignal) {
+	public static String handleSignal(IoSession session, String rawSignal) {
 		
 		// decrypt,this is not implemented now.
 		String contentSignal=Secrete.decrypt(rawSignal);
 		// get json string from raw string
 		// convert the json string to Signal object.
 		Signal signal=ParserFactory.convert(contentSignal);
-	    //process 
+		
+		//Record the connect information of this client.
+		IConnectManager connectManager=SocketConnectManager.getInstance();
+		connectManager.maintainConnection(session,signal);
+	    //process the bussiness
 		ISignalHandler handler=HandlerFactory.getInstance(signal);
 		Signal response=handler.handle(signal);
 		//response to the remote peer
@@ -32,7 +40,8 @@ public class SignalManager{
 		return backJson;
 		
 	}
-    /**
+	
+	/**
      *  If there is no response,return empty string.
      *  <p>else,return the json of response.
       * @param response

@@ -77,8 +77,9 @@ public class AVSignalhandler extends IoHandlerAdapter {
 	    	//invoke the manager
 	    	//LOGGER.info("-------------the whole receive json string is------------"+readedContent);
 	    	LOGGER.info("-------------receive the message-------------"+new Date()+"----"+ToJson.toJson(message));
-	    	String response=SignalManager.handleSignal(message.toString());
+	    	String response=SignalManager.handleSignal(session,message.toString());
 	    	if(response!=null&&!"".equals(response)){
+	    	   
 	    	   session.write(response);
 	    	}
 	    }
