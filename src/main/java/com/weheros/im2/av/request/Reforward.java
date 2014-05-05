@@ -19,7 +19,14 @@ public class Reforward implements Serializable {
 	private static final long serialVersionUID = 637982323724049255L;
 	private String peerAccount;
 	private String myAccount;
-	private Object data;
+	private Object nego; //data of the reforward
+	
+	public Object getNego() {
+		return nego;
+	}
+	public void setNego(Object nego) {
+		this.nego = nego;
+	}
 	public String getPeerAccount() {
 		return peerAccount;
 	}
@@ -31,12 +38,6 @@ public class Reforward implements Serializable {
 	}
 	public void setMyAccount(String myAccount) {
 		this.myAccount = myAccount;
-	}
-	public Object getData() {
-		return data;
-	}
-	public void setData(Object data) {
-		this.data = data;
 	}
 	
 	

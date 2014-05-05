@@ -34,6 +34,8 @@ public class CallHandler implements ISignalHandler {
 		respone.setMyAccount(calling.getMyAccount());
 		respone.setPeerAccount(calling.getPeerAccount());
 		// TODO: query the sessionID and relay ip and port.
+		respone.setRelayIP("115.29.145.142");
+		respone.setRelayPort(333);
 		respone.setSessionID(202);
 		
 		//create the response for this request.

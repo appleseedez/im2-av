@@ -7,7 +7,6 @@ import java.nio.charset.Charset;
 import org.apache.log4j.Logger;
 import org.apache.mina.core.service.IoAcceptor;
 import org.apache.mina.core.session.IdleStatus;
-import org.apache.mina.filter.codec.ProtocolCodecFactory;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.codec.prefixedstring.PrefixedStringCodecFactory;
 import org.apache.mina.filter.logging.LoggingFilter;
@@ -35,6 +34,13 @@ public class SocketConnectServer {
 		PrefixedStringCodecFactory codecFactory=new PrefixedStringCodecFactory(Charset.forName("UTF-8"));
 		codecFactory.setDecoderPrefixLength(2);
 		codecFactory.setDecoderMaxDataLength(32767);
+		codecFactory.setEncoderPrefixLength(2);
+		codecFactory.setEncoderMaxDataLength(32767);
+		
+		/*AVProtocolCodecFactory codecFactory=new AVProtocolCodecFactory(Charset.forName("UTF-8"));
+		codecFactory.setDecoderPrefixLength(2);
+		codecFactory.setDecoderMaxDataLength(32767);*/
+		
 		acceptor.getFilterChain().addLast("codec",	new ProtocolCodecFilter(codecFactory));
 
 		acceptor.setHandler(new AVSignalhandler());

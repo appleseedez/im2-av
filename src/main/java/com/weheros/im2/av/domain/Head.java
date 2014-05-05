@@ -16,7 +16,14 @@ public class Head {
     private Integer signalType;
     // 0:normal,-1:abnormal
     private Integer status;
+    private Integer seq=0;//sequence of request
     
+	public Integer getSeq() {
+		return seq;
+	}
+	public void setSeq(Integer seq) {
+		this.seq = seq;
+	}
 	public String getSessionToken() {
 		return sessionToken;
 	}

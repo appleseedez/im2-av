@@ -1,6 +1,7 @@
 package com.weheros.im2.av;
 
 
+import org.apache.log4j.Logger;
 import org.apache.mina.core.session.IoSession;
 
 import com.weheros.im2.av.domain.Signal;
@@ -8,6 +9,7 @@ import com.weheros.im2.av.domain.SignalType;
 import com.weheros.im2.av.handler.HandlerFactory;
 import com.weheros.im2.av.handler.ISignalHandler;
 import com.weheros.im2.av.parser.ParserFactory;
+import com.weheros.im2.av.socket.SocketConnectServer;
 import com.weheros.im2.av.socket.connect.IConnectManager;
 import com.weheros.im2.av.socket.connect.SocketConnectManager;
 import com.weheros.platform.security.Secrete;
@@ -19,7 +21,7 @@ import com.weheros.platform.utils.ToJson;
  * @created 27-03-2014 12:11:10
  */
 public class SignalManager{
-   
+	protected static final Logger LOG = Logger.getLogger(SocketConnectServer.class);
 	public static String handleSignal(IoSession session, String rawSignal) {
 		
 		// decrypt,this is not implemented now.
@@ -37,6 +39,7 @@ public class SignalManager{
 		//response to the remote peer
 		//write back to client.
 		String backJson=encapsulate(response);//ToJson.toJson(response);
+		LOG.info("------------wirte back to client------------"+backJson);
 		return backJson;
 		
 	}
