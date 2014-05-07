@@ -6,6 +6,7 @@ package com.weheros.im2.av.handler;
 
 import com.weheros.im2.av.domain.Signal;
 import com.weheros.im2.av.response.NotNeedResponse;
+import com.weheros.platform.log.LogService;
 
 /**
  * @ClassName: HeartBeatHandler
@@ -16,8 +17,10 @@ public class HeartBeatHandler implements ISignalHandler {
 
 	@Override
 	public Signal handle(Signal signal) {
+		LogService.debug(HeartBeatHandler.class, "-This is HeartBeatHandler which is no response.-");
 	
 		return new NotNeedResponse();
+		
 		
 	}
 

@@ -41,47 +41,15 @@ public class AVSignalhandler extends IoHandlerAdapter {
 	        session.close(true);
 	    }
         
-	    private static String readedContent="";
-	    private static int lengthOfConetent=0;
-	    private static int readedLengthOfConetent=0;
+	 
 	    public void messageReceived(IoSession session, Object message) throws Exception {
-	       
-	    	
-	    /*	while(true){
-	    		LOGGER.info("-------------receive the message-------------"+new Date()+"----"+ToJson.toJson(message));
-	    		String current=message.toString();
-	    		if(current.getBytes().length< 2){
-	    			//no is possible
-	    			//if this is true,IT IS HALT!
-	    			LOGGER.error("-----the message from client is NOT ------------"+ToJson.toJson(message));
-	    		}
-	    		if(lengthOfConetent == 0){ //first read
-	    		String maybeLengthOfJson=current.substring(0, 1);
-	    		lengthOfConetent=Integer.valueOf(maybeLengthOfJson);//length of json	
-	    		//maybe the whole json
-	    		
-	    		readedContent=readedContent+current.substring(2);
-	    		readedLengthOfConetent+=current.substring(2).length();
-	    		}else{
-
-		    		readedContent=readedContent+current;
-		    		readedLengthOfConetent+=current.length();
-	    		}
-	    		
-	    		if(lengthOfConetent!=0 && readedLengthOfConetent==lengthOfConetent){
-	    			break;
-	    		}
-	    		LOGGER.info("------------whole length of json----------"+lengthOfConetent+",--------current readed length is------ "+readedLengthOfConetent);
-	    	}*/
-	      
-	    	//invoke the manager
-	    	//LOGGER.info("-------------the whole receive json string is------------"+readedContent);
+	 	      
+	    	//invoke the manager	    	
 	    	LOGGER.info("-------------receive the message-------------"+new Date()+"----"+ToJson.toJson(message));
 	    	String response=SignalManager.handleSignal(session,message.toString());
 	    	if(response!=null&&!"".equals(response)){
-	    	 
-	    	   session.write(response);
-	    	   
+	    	   LOGGER.info("------------wirte back to client------------"+response);
+	    	   session.write(response);   	   
 	    	   
 	    	}
 	    }

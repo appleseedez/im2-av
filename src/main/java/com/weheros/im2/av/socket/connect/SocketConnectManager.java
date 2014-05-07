@@ -12,6 +12,7 @@ import org.apache.mina.core.session.IoSession;
 import com.weheros.im2.av.domain.SessionTokenService;
 import com.weheros.im2.av.domain.Signal;
 import com.weheros.im2.av.domain.SignalType;
+import com.weheros.platform.log.LogService;
 
 /**
  * @ClassName: RegistryManager
@@ -63,6 +64,7 @@ public class SocketConnectManager implements IConnectManager {
 				}else{
 					//this is same account but not same connect.
 					//maybe mutiple client use the same account to connect the socket server.
+					LogService.info(SocketConnectManager.class, "Note!The last logined account is:"+accountKey+",it's newest session ("+session.getId()+") will replace the old session ("+pools.get(accountKey).getSession().getId()+").");
 					pools.remove(accountKey);//remove old
 					pools.put(accountKey, anthoer);
 				}
@@ -71,6 +73,9 @@ public class SocketConnectManager implements IConnectManager {
 				//add session(connect of socket) in pool.
 				pools.put(accountKey, anthoer);
 			}
+			//
+			LogService.info(SocketConnectManager.class, "=====Congratunations! ("+accountKey+":"+session.getId()+"+) is stored in SoCKET SESSION POOLS.====");
+			
 		}
 		
 	}

@@ -20,6 +20,14 @@ public class Login implements Serializable {
 	private static final long serialVersionUID = -2574055897480518390L;
 	private String account;
 	private String password;
+	public Login(){
+		
+	}
+	public Login(String account, String password) {
+		super();
+		this.account = account;
+		this.password = password;
+	}
 	public String getAccount() {
 		return account;
 	}

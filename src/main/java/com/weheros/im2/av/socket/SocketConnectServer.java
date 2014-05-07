@@ -30,7 +30,7 @@ public class SocketConnectServer {
 		IoAcceptor acceptor = new NioSocketAcceptor();
 
 		acceptor.getFilterChain().addLast("logger", new LoggingFilter());
-		//
+		//decoder and encoder
 		PrefixedStringCodecFactory codecFactory=new PrefixedStringCodecFactory(Charset.forName("UTF-8"));
 		codecFactory.setDecoderPrefixLength(2);
 		codecFactory.setDecoderMaxDataLength(32767);

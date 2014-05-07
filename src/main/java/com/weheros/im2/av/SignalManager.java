@@ -39,7 +39,7 @@ public class SignalManager{
 		//response to the remote peer
 		//write back to client.
 		String backJson=encapsulate(response);//ToJson.toJson(response);
-		LOG.info("------------wirte back to client------------"+backJson);
+		
 		return backJson;
 		
 	}
