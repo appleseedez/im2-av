@@ -6,8 +6,9 @@ package com.weheros.im2.av.request;
 
 
 /**
+ * Call between two peers.
  * @ClassName: Call
- * @author Administrator
+ * @author Yang
  * @date 2014年4月23日 下午4:59:43
  */
 public class Call {

@@ -10,6 +10,9 @@ import com.weheros.im2.av.domain.SignalType;
 import com.weheros.im2.av.request.StartCalling;
 import com.weheros.im2.av.response.FAResponse;
 import com.weheros.im2.av.response.StartCallingRes;
+import com.weheros.im2.av.subnode.ISubNodeManager;
+import com.weheros.im2.av.subnode.SubNode;
+import com.weheros.im2.av.subnode.SubNodeManager;
 import com.weheros.platform.utils.ToJson;
 
 /**
@@ -33,9 +36,12 @@ public class CallHandler implements ISignalHandler {
 		StartCallingRes respone=new StartCallingRes();
 		respone.setMyAccount(calling.getMyAccount());
 		respone.setPeerAccount(calling.getPeerAccount());
-		// TODO: query the sessionID and relay ip and port.
-		respone.setRelayIP("115.29.145.142");
-		respone.setRelayPort(333);
+		//query the sessionID and relay ip and port.
+		ISubNodeManager manager=new SubNodeManager();
+		SubNode relayServer=manager.selectRelayServer();
+		respone.setRelayIP(relayServer.getIp());
+		respone.setRelayPort(relayServer.getPort());
+		//This is the same as conversation.
 		respone.setSessionID(202);
 		
 		//create the response for this request.
